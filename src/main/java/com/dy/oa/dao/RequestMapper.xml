@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dy.oa.dao.RequestMapper">
+	<resultMap id="BaseResultMap" type="com.dy.oa.pojo.Request">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="deal_status" property="dealStatus" jdbcType="VARCHAR" />
+		<result column="file" property="file" />
+		<result column="deal_time" property="dealTime" jdbcType="TIMESTAMP" />
+		<result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+		<association property="dealPeople" column="deal_people_id"
+			javaType="request" select="com.dy.oa.dao.UserMapper.selectByPrimaryKey" />
+		<association property="requestType" column="request_type_id"
+			javaType="request" select="com.dy.oa.dao.RequestTypeMapper.selectByPrimaryKey" />
+		<association property="staff" column="staff_id" javaType="request"
+			select="com.dy.oa.dao.StaffMapper.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, content, deal_people_id, deal_status, file,
+		deal_time,
+		request_time, request_type_id,
+		staff_id
+	</sql>
+	<sql id="query_request_update">
+		<if test="content!=null">
+			content = #{content},
+		</if>
+		<if test="dealPeople!=null">
+			deal_people_id = #{dealPeople.id},
+		</if>
+		<if test="dealStatus!=null">
+			deal_status = #{dealStatus},
+		</if>
+		<if test="file!=null">
+			file = #{file},
+		</if>
+		<if test="dealTime!=null">
+			deal_time = #{dealTime},
+		</if>
+		<if test="requestTime!=null">
+			request_time = #{requestTime},
+		</if>
+		<if test="requestType!=null">
+			request_type_id = #{requestType.id},
+		</if>
+		<if test="staff!=null">
+			staff_id = #{staff.id},
+		</if>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from request
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectWaitRequestByTarget" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from request
+		where deal_people_id = #{id,jdbcType=INTEGER} and deal_status = "未处理";
+	</select>
+	<select id="selectDealedRequest" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from request
+		where deal_status = "已同意" or deal_status = "已拒绝" and deal_people_id = #{id}
+	</select>
+	<select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from request
+		where staff_id = #{id}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		request
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.dy.oa.pojo.Request">
+		insert into request (id,
+		content, deal_people_id,
+		deal_status, file, deal_time,
+		request_time,
+		request_type_id, staff_id
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR},
+		#{dealPeople.id,jdbcType=INTEGER},
+		#{dealStatus,jdbcType=VARCHAR}, #{file},
+		#{dealTime,jdbcType=TIMESTAMP},
+		#{requestTime,jdbcType=TIMESTAMP},
+		#{requestType.id,jdbcType=INTEGER},
+		#{staff.id,jdbcType=INTEGER}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.dy.oa.pojo.Request">
+		update request
+		<set>
+			<include refid="query_request_update" />
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dy.oa.dao.AnnouncementMapper">
+	<resultMap id="BaseResultMap" type="com.dy.oa.pojo.Announcement">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="issuer" property="issuer" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="announcement_type" property="announcementType"
+			jdbcType="VARCHAR" />
+		<association property="organize" column="organize_id"
+			javaType="announcement" select="com.dy.oa.dao.OrganizeMapper.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, title, content, issuer, create_time, announcement_type,
+		organize_id
+	</sql>
+	<sql id="query_announcement_update">
+		<if test="title!=null">
+			title = #{title},
+		</if>
+		<if test="content!=null">
+			content = #{content},
+		</if>
+		<if test="issuer!=null">
+			issuer = #{issuer},
+		</if>
+		<if test="createTime!=null">
+			create_time = #{createTime},
+		</if>
+		<if test="announcementType!=null">
+			announcement_type = #{announcementType},
+		</if>
+		<if test="organize!=null">
+			organize_id = #{organize.id},
+		</if>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from announcement
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from announcement
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		announcement
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.dy.oa.pojo.Announcement">
+		insert into announcement (id,
+		title, content,
+		issuer, create_time, announcement_type, organize_id
+		)
+		values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR},
+		#{issuer,jdbcType=VARCHAR},
+		#{createTime,jdbcType=DATE}, #{announcementType,jdbcType=VARCHAR},
+		#{organize.id}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.dy.oa.pojo.Announcement">
+		update announcement
+		<set>
+			<include refid="query_announcement_update" />
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

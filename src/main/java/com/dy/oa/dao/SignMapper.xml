@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dy.oa.dao.SignMapper">
+	<resultMap id="BaseResultMap" type="com.dy.oa.pojo.Sign">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sign_in" property="signIn" jdbcType="TIMESTAMP" />
+		<result column="sign_out" property="signOut" jdbcType="TIMESTAMP" />
+		<result column="date" property="date" jdbcType="DATE" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<association property="staff" column="staff_id" javaType="sign"
+			select="com.dy.oa.dao.StaffMapper.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, sign_in, sign_out, date, remark, staff_id
+	</sql>
+	<sql id="query_sign_update">
+		<if test="signIn!=null">
+			sign_in = #{signIn},
+		</if>
+		<if test="signOut!=null">
+			sign_out = #{signOut},
+		</if>
+		<if test="date!=null">
+			date = #{date},
+		</if>
+		<if test="remark!=null">
+			remark = #{remark},
+		</if>
+		<if test="staff!=null">
+			staff_id = #{staff.id},
+		</if>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sign
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByStaffAndDate" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from sign
+		where staff_id = #{staffId,jdbcType=INTEGER} and date = #{date}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sign
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.dy.oa.pojo.Sign">
+		insert into sign (id, sign_in, sign_out,
+		date, remark, staff_id)
+		values (#{id,jdbcType=INTEGER}, #{signIn,jdbcType=TIMESTAMP},
+		#{signOut,jdbcType=TIMESTAMP},
+		#{date,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, #{staff.id,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.dy.oa.pojo.Sign">
+		update sign
+		<set>
+			<include refid="query_sign_update" />
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

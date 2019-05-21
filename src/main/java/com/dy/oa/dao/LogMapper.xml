@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dy.oa.dao.LogMapper">
+	<resultMap id="BaseResultMap" type="com.dy.oa.pojo.Log">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="file" property="file" />
+		<result column="status" property="status" />
+		<result column="comment" property="comment" />
+		<association property="target" column="target_id" javaType="log"
+			select="com.dy.oa.dao.UserMapper.selectByPrimaryKey" />
+		<association property="staff" column="staff_id" javaType="log"
+			select="com.dy.oa.dao.StaffMapper.selectByPrimaryKey" />
+		<association property="logType" column="log_type_id"
+			javaType="log" select="com.dy.oa.dao.LogTypeMapper.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, content, create_time,file, target_id, staff_id,
+		log_type_id, status, comment
+	</sql>
+	<sql id="query_log_update">
+		<if test="content!=null">
+			content = #{content},
+		</if>
+		<if test="createTime!=null">
+			create_time = #{createTime},
+		</if>
+		<if test="file!=null">
+			file = #{file},
+		</if>
+		<if test="target!=null">
+			target_id = #{target.id},
+		</if>
+		<if test="staff!=null">
+			staff_id = #{staff.id},
+		</if>
+		<if test="logType!=null">
+			log_type_id = #{logType.id},
+		</if>
+		<if test="status!=null">
+			status = #{status},
+		</if>
+		<if test="comment!=null">
+			comment = #{comment},
+		</if>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from log
+		where id = #{id}
+	</select>
+	<select id="selectByTargetId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from log
+		where target_id = #{id}
+	</select>
+	<select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from `log`
+		where staff_id = #{id}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+		delete from log
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="com.dy.oa.pojo.Log">
+		insert into log (id, content,
+		create_time,
+		file,
+		target_id, staff_id,
+		log_type_id, status, comment)
+		values
+		(#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{file},
+		#{target.id}, #{staff.id,jdbcType=INTEGER},
+		#{logType.id,jdbcType=INTEGER},
+		#{status},
+		#{comment})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.dy.oa.pojo.Log">
+		update log
+		<set>
+			<include refid="query_log_update" />
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dy.oa.dao.ChatMapper">
+	<resultMap id="BaseResultMap" type="com.dy.oa.pojo.Chat">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<association property="user" column="user_id" javaType="chat"
+			select="com.dy.oa.dao.UserMapper.selectByPrimaryKey" />
+		<association property="organize" column="organize_id" javaType="chat"
+			select="com.dy.oa.dao.OrganizeMapper.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, create_time, content, user_id, organize_id
+	</sql>
+	<sql id="query_chat_update">
+		<if test="content!=null">
+			content = #{content},
+		</if>
+		<if test="user!=null">
+			user_id = #{user.id},
+		</if>
+		<if test="createTime!=null">
+			create_time = #{createTime},
+		</if>
+		<if test="organzie!=null">
+			organize_id = #{organize.id},
+		</if>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from chat
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByOrganizeId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from chat
+		where organize_id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from chat
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.dy.oa.pojo.Chat">
+		insert into chat (id, content, create_time,
+		user_id, organize_id)
+		values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
+		#{createTime},
+		#{user.id}, #{organize.id})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.dy.oa.pojo.Chat">
+		update chat
+		<set>
+			<include refid="query_chat_update" />
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
