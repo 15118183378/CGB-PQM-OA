@@ -22,20 +22,20 @@
 
 		<!-- 生成模型的包名和位置 -->
 		<javaModelGenerator targetPackage="com.dy.oa.pojo"
-			targetProject="C:\Users\tencent\workspace\office-automation\src\main\java">
+			targetProject="C:\Users\tencent\workspace\CGB-PQM-OA\src\main\java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- 生成映射文件的包名和位置 -->
 		<sqlMapGenerator targetPackage="com.dy.oa.dao"
-			targetProject="C:\Users\tencent\workspace\office-automation\src\main\java">
+			targetProject="C:\Users\tencent\workspace\CGB-PQM-OA\src\main\java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<!-- 生成dao的包名和位置 -->
 		<javaClientGenerator type="XMLMAPPER"
-			targetPackage="com.dy.oa.dao" targetProject="C:\Users\tencent\workspace\office-automation\src\main\java">
+			targetPackage="com.dy.oa.dao" targetProject="C:\Users\tencent\workspace\CGB-PQM-OA\src\main\java">
 			<property name="enableSubPackage" value="true" />
 		</javaClientGenerator>
 

@@ -1,8 +1,8 @@
 function createOrg() {
-	window.location.href = "http://localhost:8080/office-automation/organize/toCreateOrganize";
+	window.location.href = "http://localhost:8080/CGB-PQM-OA/organize/toCreateOrganize";
 }
 function createIndex() {
-	window.location.href = "http://localhost:8080/office-automation/user/loginSuccess";
+	window.location.href = "http://localhost:8080/CGB-PQM-OA/user/loginSuccess";
 }
 
 function check() {
