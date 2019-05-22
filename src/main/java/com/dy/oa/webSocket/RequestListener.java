@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class RequestListener implements ServletRequestListener {
 
     public void requestInitialized(ServletRequestEvent sre)  {
-        //将所有request请求都携带上httpSession
+    	//灏嗘墍鏈塺equest璇锋眰閮芥惡甯︿笂httpSession
         ((HttpServletRequest) sre.getServletRequest()).getSession();
 
     }
